@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+   "vectorwatch-sdk": "1.0.27",
+   "vectorwatch-authprovider-abstract": "1.0.1",
+   "vectorwatch-authprovider-oauth1": "1.0.1",
+   "vectorwatch-authprovider-oauth2": "1.0.3",
+   "vectorwatch-storageprovider-abstract": "1.0.2",
+   "vectorwatch-storageprovider-filesystem ": "1.0.3",
+   "vectorwatch-storageprovider-memory": "1.0.2",
+   "vectorwatch-storageprovider-mysql": "1.0.4",
+   "express": "^4.13.3",
+   "bluebird": "^2.10.2",
+   "node-cache": "^3.2.0"
+  },
+  "scripts": { "start" : "node  index.js" } ,
+  "author": "robert.miroiu@vectorwatch.com",
+  "license": "ISC"
+}

@@ -1,0 +1,13 @@
+{
+  "name": "VectorCloud-Stocks",
+  "description": "Stocks stream for VectorWach",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+   "request": ""
+  }
+}
