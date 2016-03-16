@@ -10,7 +10,7 @@ var Promise = require('bluebird'),
 //var CircularJSON = require('circular-json');
 
 var CHUNK_SIZE = 50;
-var UPDATE_INTERVAL_MINUTES = 1;
+var UPDATE_INTERVAL_MINUTES = 5;
 
 var vectorWatch = new VectorWatch({
     streamUID: process.env.STREAM_UID,
@@ -78,18 +78,32 @@ vectorWatch.on('unsubscribe', function(event, response) {
  * Push method. Repeat at every UPDATE_INTERVAL_MINUTES
  */
 setInterval(function() {
+    console.log("aaa")
     storageProvider.getAllUserSettingsAsync().then(function(records) {
         for (var i = 0; i < records.length; i += CHUNK_SIZE) {
             var _chunk = records.slice(i, i + CHUNK_SIZE);
-            yahooStocksApi.getMultiple(buildSymbolsArray(_chunk)).then(function (symbolValues) {
-                _chunk.forEach(function(record, index) {
-                    stocksCache.set(record.userSettings.Ticker.name, { value : symbolValues[record.userSettings.Ticker.name] }, function( err, success ) {});
-                    console.log("Lets do the push" + record.channelLabel + " " + buildPushData(record.userSettings, symbolValues[record.userSettings.Ticker.name]) + " " + index);
-                    //do push  
-                });
-            }).catch(function (e) {
 
-            });
+            if (_chunk.length > 1) {
+                yahooStocksApi.getMultiple(buildSymbolsArray(_chunk)).then(function (symbolValues) {
+                    _chunk.forEach(function(record, index) {
+                        stocksCache.set(record.userSettings.Ticker.name, { value : symbolValues[record.userSettings.Ticker.name] }, function( err, success ) {});
+                        console.log("Lets do the push" + record.channelLabel + " " + buildPushData(record.userSettings, symbolValues[record.userSettings.Ticker.name]) + " " + index);
+                        //do push
+                    });
+                }).catch(function (e) {
+
+                });
+            } else {
+                yahooStocksApi.get(_chunk[0].userSettings.Ticker.name).then(function (symbolValue) {
+                    stocksCache.set(_chunk[0].userSettings.Ticker.name, { value : symbolValue }, function( err, success ) {});
+                    console.log("Lets do the push" + _chunk[0].channelLabel + " " + buildPushData(_chunk[0].userSettings, symbolValue) );
+                        //do push
+
+                }).catch(function (e) {
+                    console.log(e)
+                });
+            }
+
         }
     }).catch(function(err) {
 
