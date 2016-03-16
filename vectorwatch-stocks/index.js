@@ -10,7 +10,7 @@ var Promise = require('bluebird'),
 //var CircularJSON = require('circular-json');
 
 var CHUNK_SIZE = 50;
-var UPDATE_INTERVAL_MINUTES = 30;
+var UPDATE_INTERVAL_MINUTES = 1;
 
 var vectorWatch = new VectorWatch({
     streamUID: process.env.STREAM_UID,
@@ -39,7 +39,7 @@ var yahooStocksApi = new YahooStocksApi();
 
 
 vectorWatch.on('subscribe', function(event, response) {
-
+    console.log("Subscribe");
     var cached = stocksCache.get(event.getUserSettings().settings.Ticker.name);
     if (cached) {
         response.setValue(buildPushData(event.getUserSettings().settings, cached.value));
@@ -50,11 +50,15 @@ vectorWatch.on('subscribe', function(event, response) {
         storageProvider.storeUserSettingsAsync(event.getChannelLabel(), event.getUserSettings()).then(function(contents) {
             stocksCache.set(event.getUserSettings().settings.Ticker.name, { value : symbolValue }, function( err, success ) {});
             response.setValue(buildPushData(event.getUserSettings().settings, symbolValue));
+            console.log("SEND");
             response.send();
         }).catch(function(err) {
+            console.log("err1")
+            console.log(err)
             response.sendBadRequestError();
         });
     }).catch(function(err) {
+        console.log(err)
         response.sendBadRequestError();
     })
 });
@@ -93,7 +97,7 @@ setInterval(function() {
 }, UPDATE_INTERVAL_MINUTES * 60 * 1000);
 
 
-
+app.use('/api/callback/test', function() { } );
 app.use('/api/callback', vectorWatch.getMiddleware());
 
 http.createServer(app).listen(process.env.PORT || 8080, function() {
