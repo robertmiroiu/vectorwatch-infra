@@ -14,7 +14,8 @@ var UPDATE_INTERVAL_MINUTES = 5;
 
 var vectorWatch = new VectorWatch({
     streamUID: process.env.STREAM_UUID,
-    token: process.env.VECTOR_TOKEN
+    token: process.env.VECTOR_TOKEN,
+    production: true
 });
 
 
