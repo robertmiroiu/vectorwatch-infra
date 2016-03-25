@@ -33,7 +33,7 @@ var yahooStocksApi = new YahooStocksApi();
 
 vectorWatch.on('subscribe', function(event, response) {
     console.log("Subscribe");
-    vectorWatch.logger.log("INFO", "New user subscribed to this stream")
+    vectorWatch.logger.info("New user subscribed to this stream", {code: 200, uemail: "robert.miroiu@gmail.com"})
     var cached = stocksCache.get(event.getUserSettings().settings.Ticker.name);
     if (cached) {
         response.setValue(buildPushData(event.getUserSettings().settings, cached.value));
@@ -49,10 +49,12 @@ vectorWatch.on('subscribe', function(event, response) {
         }).catch(function(err) {
             console.log("err1")
             console.log(err)
+            vectorWatch.logger.error("store user error" + JSON.stringify(err));
             response.sendBadRequestError();
         });
     }).catch(function(err) {
         console.log(err)
+        vectorWatch.logger.error("Subscribe user error" + JSON.stringify(err));
         response.sendBadRequestError();
     })
 });
@@ -82,19 +84,19 @@ setInterval(function() {
                     _chunk.forEach(function(record, index) {
                         stocksCache.set(record.userSettings.Ticker.name, { value : symbolValues[record.userSettings.Ticker.name] }, function( err, success ) {});
                         console.log("Lets do the push" + record.channelLabel + " " + buildPushData(record.userSettings, symbolValues[record.userSettings.Ticker.name]) + " " + index);
-                        vectorWatch.logger.log("INFO", "Lets do the push" + record.channelLabel + " " + buildPushData(record.userSettings, symbolValues[record.userSettings.Ticker.name]) + " " + index);
+                        vectorWatch.logger.info("Lets do the push" + record.channelLabel + " " + buildPushData(record.userSettings, symbolValues[record.userSettings.Ticker.name]) + " " + index);
                     });
                 }).catch(function (e) {
-
+                    vectorWatch.logger.error("Get yahoo data error" + JSON.stringify(e));
                 });
             } else {
                 yahooStocksApi.get(_chunk[0].userSettings.Ticker.name).then(function (symbolValue) {
                     stocksCache.set(_chunk[0].userSettings.Ticker.name, { value : symbolValue }, function( err, success ) {});
                     console.log("Lets do the push" + _chunk[0].channelLabel + " " + buildPushData(_chunk[0].userSettings, symbolValue) );
-                    vectorWatch.logger.log("INFO", "Lets do the push" + record.channelLabel + " " + buildPushData(record.userSettings, symbolValues[record.userSettings.Ticker.name]) + " " + index);
+                    vectorWatch.logger.info("Lets do the push" + record.channelLabel + " " + buildPushData(record.userSettings, symbolValues[record.userSettings.Ticker.name]) + " " + index);
 
                 }).catch(function (e) {
-                    console.log(e)
+                    vectorWatch.logger.error("Get yahoo data error" + JSON.stringify(e));
                 });
             }
 
@@ -105,7 +107,6 @@ setInterval(function() {
 }, UPDATE_INTERVAL_MINUTES * 60 * 1000);
 
 
-app.use('/api/callback/test', function() { } );
 app.use('/api/callback', vectorWatch.getMiddleware());
 
 http.createServer(app).listen(process.env.PORT || 8080, function() {
