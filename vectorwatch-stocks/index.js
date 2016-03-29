@@ -28,8 +28,9 @@ var stocksCache = new NodeCache( { stdTTL: 3600 /*60min*/, checkperiod: 120 } );
 
 var YahooStocksApi = require('./YahooStocksApi.js');
 var yahooStocksApi = new YahooStocksApi();
-
-
+ 
+vectorWatch.logger.info("This is test1info", {add1: 1, add2: 2});
+vectorWatch.logger.error("This is test1error", {add1: 4, add2: 5});
 
 vectorWatch.on('subscribe', function(event, response) {
     console.log("Subscribe");
@@ -108,6 +109,9 @@ setInterval(function() {
 
 
 app.use('/api/callback', vectorWatch.getMiddleware());
+app.use('/health', function(req,res, next) {
+    res.sendStatus(200);
+});
 
 http.createServer(app).listen(process.env.PORT || 8080, function() {
     console.log('Non-secure server started.');
