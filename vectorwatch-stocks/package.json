@@ -1,11 +1,11 @@
 {
   "name": "VectorCloud-Stocks",
   "description": "Stocks stream for VectorWach",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "main": "index.js",
   "dependencies": {
-    "vectorwatch-sdk" : "1.2.4",
+    "vectorwatch-sdk" : "1.2.5",
     "vectorwatch-storageprovider-mysql" : "1.2.0",
     "vectorwatch-storageprovider-abstract" : "1.1.0",
     "express": "^4.13.3",
