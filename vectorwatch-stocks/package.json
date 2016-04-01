@@ -5,9 +5,9 @@
   "private": true,
   "main": "index.js",
   "dependencies": {
-    "vectorwatch-sdk" : "1.2.5",
-    "vectorwatch-storageprovider-mysql" : "1.2.0",
-    "vectorwatch-storageprovider-abstract" : "1.1.0",
+    "vectorwatch-sdk" : "^1.2.5",
+    "vectorwatch-storageprovider-mysql" : "^1.2.0",
+    "vectorwatch-storageprovider-abstract" : "^1.1.0",
     "express": "^4.13.3",
     "bluebird": "^2.10.2",
     "node-cache": "^3.2.0",

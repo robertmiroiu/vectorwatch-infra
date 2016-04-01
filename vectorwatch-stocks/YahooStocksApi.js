@@ -21,7 +21,6 @@ YahooStocksApi.prototype.get = function (symbol) {
         }
         var json = {};
         try {
-            console.log(JSON.stringify(body));
             json = JSON.parse(body);
         }
         catch (err) {
@@ -125,7 +124,6 @@ function getTrendFromPriceChange(change) {
  * */
 function buildUrlForSymbol(symbol) {
     var query = encodeURIComponent('select * from yahoo.finance.quote where symbol in (\'' + symbol + '\')');
-    console.log("https://query.yahooapis.com/v1/public/yql?q=" + query + "&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=")
     return "https://query.yahooapis.com/v1/public/yql?q=" + query + "&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
 }
 
@@ -142,7 +140,7 @@ function buildUrlForSymbols(symbols) {
     return "https://query.yahooapis.com/v1/public/yql?q=" + query + "&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
 }
 
-https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quote%20where%20symbol%20in%20(AABL)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=
+
 
 function YahooStocksApiError(rawError) {
     this.raw = rawError;
