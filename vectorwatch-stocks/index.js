@@ -7,6 +7,7 @@ var Promise = require('bluebird'),
     schedule = require('node-schedule'),
     http = require('http');
 
+
 var CHUNK_SIZE = 50;
 
 var vectorWatch = new VectorWatch({
@@ -67,7 +68,7 @@ function doPush() {
                 yahooStocksApi.getMultiple(buildSymbolsArray(_chunk)).then(function (symbolValues) {
                     _chunk.forEach(function(record, index) {
                         stocksCache.set(record.userSettings.Ticker.name, { value : symbolValues[record.userSettings.Ticker.name] }, function( err, success ) {});
-                        vectorWatch.pushStreamValue(record.channelLabel, symbolValues[record.userSettings.Ticker.name]);
+                        vectorWatch.pushStreamValue(record.channelLabel, symbolValues[record.userSettings.Ticker.name], 0.1);
                     });
                 }).catch(function (e) {
                     vectorWatch.logger.error("Stocks push error1: " + JSON.stringify(e));
@@ -75,7 +76,7 @@ function doPush() {
             } else {
                 yahooStocksApi.get(_chunk[0].userSettings.Ticker.name).then(function (symbolValue) {
                     stocksCache.set(_chunk[0].userSettings.Ticker.name, { value : symbolValue }, function( err, success ) {});
-                    vectorWatch.pushStreamValue(_chunk[0].channelLabel, symbolValue);
+                    vectorWatch.pushStreamValue(_chunk[0].channelLabel, symbolValue, 0.1);
                 }).catch(function (e) {
                     vectorWatch.logger.error("Stocks push error2: " + JSON.stringify(e));
                 });
