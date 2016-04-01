@@ -61,9 +61,15 @@ YahooStocksApi.prototype.getMultiple = function (symbols) {
         }
 
         var resultsMap = {}
-        json.query.results.quote.forEach(function(quote) {
-            resultsMap[quote.symbol] = extractDataFromQuote(quote);
-        });
+
+        if (json.query.results.quote instanceof Array) {
+            json.query.results.quote.forEach(function (quote) {
+                resultsMap[quote.symbol] = extractDataFromQuote(quote);
+            });
+        } else {
+            resultsMap[json.query.results.quote.symbol] =  extractDataFromQuote(json.query.results.quote);
+        }
+
 
         future.resolve(resultsMap);
 

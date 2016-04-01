@@ -57,6 +57,7 @@ vectorWatch.on('unsubscribe', function(event, response) {
 });
 
 function doPush() {
+
     storageProvider.getAllUserSettingsAsync().then(function(records) {
 
         vectorWatch.logger.info("Stocks push" + records.length);
@@ -66,7 +67,7 @@ function doPush() {
                 yahooStocksApi.getMultiple(buildSymbolsArray(_chunk)).then(function (symbolValues) {
                     _chunk.forEach(function(record, index) {
                         stocksCache.set(record.userSettings.Ticker.name, { value : symbolValues[record.userSettings.Ticker.name] }, function( err, success ) {});
-
+                        vectorWatch.pushStreamValue(record.channelLabel, symbolValues[record.userSettings.Ticker.name]);
                     });
                 }).catch(function (e) {
                     vectorWatch.logger.error("Stocks push error1: " + JSON.stringify(e));
@@ -74,8 +75,7 @@ function doPush() {
             } else {
                 yahooStocksApi.get(_chunk[0].userSettings.Ticker.name).then(function (symbolValue) {
                     stocksCache.set(_chunk[0].userSettings.Ticker.name, { value : symbolValue }, function( err, success ) {});
-
-
+                    vectorWatch.pushStreamValue(_chunk[0].channelLabel, symbolValue);
                 }).catch(function (e) {
                     vectorWatch.logger.error("Stocks push error2: " + JSON.stringify(e));
                 });
@@ -98,7 +98,7 @@ app.use('/health', function(req,res, next) {
 http.createServer(app).listen(process.env.PORT || 8080, function() {
     console.log('Non-secure server started.');
     var scheduleRule = new schedule.RecurrenceRule();
-    scheduleRule.minute = [20, 50];
+    scheduleRule.minute = [50];
     schedule.scheduleJob(scheduleRule, doPush);
 });
 
