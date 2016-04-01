@@ -11,7 +11,8 @@ var CHUNK_SIZE = 50;
 
 var vectorWatch = new VectorWatch({
     streamUID: process.env.STREAM_UUID,
-    token: process.env.VECTOR_TOKEN
+    token: process.env.VECTOR_TOKEN,
+    production: process.env.PRODUCTION
 });
 
 var storageProvider = new MySQLStorageProvider();
